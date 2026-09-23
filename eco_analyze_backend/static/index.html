@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EAS — Environmental Analyzing System | Greater Chennai Network</title>
+  <meta name="description" content="EAS (Environmental Analyzing System) - Official real-time environmental monitoring suite for Greater Chennai tracking 26 CAAQMS air quality stations and river basins.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/libs/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Top Government Official Header Bar -->
+  <div class="gov-top-strip">
+    <div class="gov-strip-inner">
+      <div class="gov-emblem-text">
+        <span class="gov-flag-icon">🌿</span>
+        <span>EAS • ENVIRONMENTAL ANALYZING SYSTEM • TAMIL NADU POLLUTION CONTROL & CLIMATE NETWORK</span>
+      </div>
+      <div class="gov-strip-links">
+        <a href="https://app.cpcbccr.com/AQI_India/" target="_blank" rel="noopener">CPCB NAQI Portal</a>
+        <span>•</span>
+        <a href="https://tnpcb.gov.in" target="_blank" rel="noopener">TNPCB Official</a>
+        <span>•</span>
+        <a href="https://chennaimetrowater.tn.gov.in" target="_blank" rel="noopener">CMWSSB Water Board</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Application Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-logo">
+        <div class="logo-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-wrap">
+            <span class="brand-title">EAS</span>
+            <span class="brand-badge-official">ENVIRONMENTAL ANALYZING SYSTEM</span>
+          </div>
+          <span class="brand-tagline">Greater Chennai Real-Time Atmospheric & Aquatic Telemetry Grid</span>
+        </div>
+      </div>
+      <div class="status-pill" id="backendStatusPill">
+        <span class="pulse-dot"></span>
+        <span class="status-text" id="statusLabel">SYNCED (IST)</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="location-picker-box">
+        <svg class="location-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <select id="locationSelect" aria-label="Select monitoring station">
+          <option value="Alandur Bus Depot, Chennai">[South] Alandur Bus Depot</option>
+        </select>
+      </div>
+
+      <button id="simulateBtn" class="btn btn-secondary" title="Simulate dynamic sensor fluctuation">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 12h2M6 12h2M12 2v2M12 6v2M20 12h2M16 12h2M12 20v2M12 16v2"/>
+          <circle cx="12" cy="12" r="4"/>
+        </svg>
+        <span>Telemetry Sync</span>
+      </button>
+
+      <button id="quickExportBtn" class="btn btn-export" title="Export Complete Dataset to CSV">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        <span>CSV Export</span>
+      </button>
+
+      <a href="/flutter/" target="_blank" class="btn btn-secondary" title="Open Native Flutter Companion App" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; color:inherit;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+          <line x1="12" y1="18" x2="12.01" y2="18"/>
+        </svg>
+        <span>Flutter App</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Institutional Tab Navigation Bar -->
+  <nav class="portal-nav-bar">
+    <div class="nav-container">
+      <button class="nav-tab active" data-tab="tab-tracking">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+        <span>Live Radar & GIS Map</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-overview">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Station Telemetry & Dials</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-stations">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>26 Stations Compliance Matrix</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-water">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        <span>Rivers & Reservoirs Water Cell</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-grap">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Causes & Action Plan (GRAP)</span>
+      </button>
+      <button class="nav-tab" data-tab="tab-citizen">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Public Portal & Grievance</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Live Telemetry Stream Marquee Bar -->
+  <div class="live-stream-bar">
+    <div class="stream-badge">
+      <span class="live-pulse-dot"></span>
+      <span>LIVE SENSOR STREAM</span>
+    </div>
+    <div class="stream-ticker-wrap">
+      <div class="stream-ticker-inner" id="liveTickerStream">
+        <span class="ticker-item">📡 Initializing Chennai Environmental Telemetry Grid (CETG)...</span>
+      </div>
+    </div>
+    <div class="stream-diagnostics">
+      <span class="diag-item" id="streamLatency">⚡ 24ms</span>
+      <span class="diag-item" id="streamActiveCount">🟢 26/26 Online</span>
+      <button id="openComparatorBtn" class="btn-compare-mini" title="Compare Two Monitoring Stations Side-by-Side">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+        <span>Compare Stations</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       TAB 0: LIVE RADAR & GIS TRACKING (PRIMARY COMMAND VIEW)
+  ========================================================= -->
+  <section class="tab-content active" id="tab-tracking">
+    <div class="tracking-layout">
+      <!-- Left / Main Column: Geospatial Radar & Interactive Map -->
+      <div class="map-deck-column">
+        <div class="map-card-container">
+          <div class="map-header-bar">
+            <div class="map-title-area">
+              <span class="badge-tag">EAS LIVE RADAR</span>
+              <h2 class="map-title">EAS Environmental Surveillance Grid</h2>
+              <span class="map-subtitle">26 Continuous CAAQMS & River Catchments • Live Diurnal Sensors • Active Telemetry Pings</span>
+            </div>
+            <div class="map-header-actions">
+              <div class="map-filter-group" id="mapZoneFilters">
+                <button class="map-filter-btn active" data-filter="all">All (26)</button>
+                <button class="map-filter-btn" data-filter="North">North (6)</button>
+                <button class="map-filter-btn" data-filter="Central">Central (7)</button>
+                <button class="map-filter-btn" data-filter="South">South & OMR (8)</button>
+                <button class="map-filter-btn" data-filter="West">West (3)</button>
+                <button class="map-filter-btn" data-filter="Water">Water Cell (5)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Map Layer & Radar Toolbar -->
+          <div class="map-subbar-controls">
+            <div class="map-layer-selector" id="mapLayerSelector">
+              <button class="layer-pill-btn active" data-layer="satellite" id="btnLayerSat">
+                <span class="pill-icon">🛰️</span>
+                <span>Live Satellite</span>
+              </button>
+              <button class="layer-pill-btn" data-layer="streets" id="btnLayerStreets">
+                <span class="pill-icon">🗺️</span>
+                <span>Streets & Water</span>
+              </button>
+              <button class="layer-pill-btn" data-layer="topo" id="btnLayerTopo">
+                <span class="pill-icon">🌊</span>
+                <span>Topographic</span>
+              </button>
+              <button class="layer-pill-btn" data-layer="dark" id="btnLayerDark">
+                <span class="pill-icon">🌌</span>
+                <span>Tactical Dark</span>
+              </button>
+            </div>
+
+            <div class="map-toggles-wrap">
+              <label class="map-toggle-chip" title="Toggle rotating radar scan beam">
+                <input type="checkbox" id="toggleRadarSweep" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">📡 Radar Sweep</span>
+              </label>
+              <label class="map-toggle-chip" title="Highlight Cooum, Adyar, and Buckingham Canal waterways">
+                <input type="checkbox" id="toggleWaterways" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">💧 River Basins</span>
+              </label>
+              <label class="map-toggle-chip" title="Show station AQI badges on map">
+                <input type="checkbox" id="toggleStationBadges" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">🏷️ Station Labels</span>
+              </label>
+              <button id="resetMapCenterBtn" class="map-recenter-btn" title="Recenter on Chennai Metropolitan Area">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+                <span>Recenter</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- The Leaflet Map Canvas -->
+          <div class="map-canvas-wrapper">
+            <div id="chennaiGisMap" class="chennai-map-view"></div>
+
+            <!-- Rotating Radar Sweep Beam Overlay -->
+            <div class="radar-sweep-beam-container" id="radarSweepContainer">
+              <div class="radar-sweep-beam"></div>
+              <div class="radar-crosshair-v"></div>
+              <div class="radar-crosshair-h"></div>
+              <div class="radar-compass-n">N</div>
+              <div class="radar-compass-e">E</div>
+              <div class="radar-compass-s">S</div>
+              <div class="radar-compass-w">W</div>
+            </div>
+
+            <!-- Live Weather & Telemetry Floating HUD -->
+            <div class="map-weather-hud">
+              <div class="hud-weather-item" title="Bay of Bengal Inflow Sea Breeze">
+                <span class="m-icon">💨</span>
+                <span id="mapHudWind">14 km/h ENE (Bay Breeze)</span>
+              </div>
+              <div class="hud-weather-item" title="Marine Ambient Humidity">
+                <span class="m-icon">💧</span>
+                <span id="mapHudHumidity">74% RH</span>
+              </div>
+              <div class="hud-weather-item" title="Active CAAQMS Telemetry Stations">
+                <span class="m-icon">🟢</span>
+                <span id="mapHudNodes">26/26 Active Nodes</span>
+              </div>
+            </div>
+
+            <!-- Map Legend HUD -->
+            <div class="map-legend-hud">
+              <div class="legend-chip"><span class="legend-dot dot-good"></span> Good (0–50)</div>
+              <div class="legend-chip"><span class="legend-dot dot-moderate"></span> Moderate (51–100)</div>
+              <div class="legend-chip"><span class="legend-dot dot-unhealthy"></span> Unhealthy (101–200)</div>
+              <div class="legend-chip"><span class="legend-dot dot-severe"></span> Severe (200+)</div>
+            </div>
+
+            <!-- Map Center Coordinates Status -->
+            <div class="map-coords-badge">
+              <span>LAT: 13.0600°N • LON: 80.2350°E • CHENNAI TMA</span>
+            </div>
+          </div>
+
+          <!-- Auto-Tour & Live Tracking Playback Control Deck -->
+          <div class="tour-control-deck">
+            <div class="tour-left">
+              <button id="tourPlayPauseBtn" class="btn btn-tour-play">
+                <svg id="tourPlayIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span id="tourPlayText">Start Live Auto-Tour</span>
+              </button>
+              <button id="tourPrevBtn" class="btn btn-icon-round" title="Previous Station">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button id="tourNextBtn" class="btn btn-icon-round" title="Next Station">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <div class="tour-speed-selector">
+                <span>Cycle Speed:</span>
+                <button class="speed-btn active" data-speed="8000">8s</button>
+                <button class="speed-btn" data-speed="4000">4s</button>
+                <button class="speed-btn" data-speed="2000">2s</button>
+              </div>
+            </div>
+            <div class="tour-right">
+              <div class="tour-status-text">
+                <span id="tourStationIndex">Station 1 of 26</span>: 
+                <strong id="tourStationName">Alandur Bus Depot</strong>
+              </div>
+              <div class="tour-progress-track">
+                <div class="tour-progress-bar" id="tourProgressBar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Sensor Telemetry Terminal Log -->
+        <div class="terminal-log-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="t-dot red"></span>
+              <span class="t-dot yellow"></span>
+              <span class="t-dot green"></span>
+            </div>
+            <span class="terminal-title">LIVE TELEMETRY PACKET LOG • CHENNAI ENVIRONMENTAL TELEMETRY GRID</span>
+            <span class="terminal-seq" id="terminalPacketCount">Packets: 0</span>
+          </div>
+          <div class="terminal-body" id="telemetryPacketLog">
+            <div class="t-line info">[00:00:00.000] CETG Telemetry daemon initialized. Handshaking with 26 CAAQMS stations...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Tracked Station Live HUD & Causes Cell -->
+      <div class="tracked-hud-column">
+        <!-- Main Tracked Station Card -->
+        <div class="glass-card tracked-station-card">
+          <div class="tracked-card-top">
+            <div class="station-meta-badge" id="trackedStationAgency">CPCB & TNPCB CAAQMS</div>
+            <span class="pulse-tag" id="trackedLiveTag">LIVE TELEMETRY</span>
+          </div>
+
+          <h3 class="tracked-station-title" id="trackedStationTitle">Alandur Bus Depot, Chennai</h3>
+          <div class="tracked-station-sub" id="trackedStationSub">South Chennai • Station ID: CPCB_TN_CHN_ALN</div>
+
+          <!-- Big Live AQI Meter -->
+          <div class="tracked-meter-row">
+            <div class="tracked-dial-wrap">
+              <div class="tracked-aqi-num" id="trackedAqiVal">108</div>
+              <div class="tracked-aqi-label">LIVE AQI</div>
+            </div>
+            <div class="tracked-status-box">
+              <span class="status-chip status-moderate" id="trackedStatusBadge">Moderate</span>
+              <p class="tracked-desc" id="trackedDescText">Acceptable air quality; sensitive groups should consider reducing heavy outdoor exertion.</p>
+            </div>
+          </div>
+
+          <!-- Key Pollutants Grid -->
+          <div class="hud-pollutants-grid">
+            <div class="hud-param-box">
+              <div class="hud-param-val" id="trackedPm25">42.0</div>
+              <div class="hud-param-label">PM2.5 (µg/m³)</div>
+              <span class="hud-param-std">Limit: 60</span>
+            </div>
+            <div class="hud-param-box">
+              <div class="hud-param-val" id="trackedPm10">115.0</div>
+              <div class="hud-param-label">PM10 (µg/m³)</div>
+              <span class="hud-param-std">Limit: 100</span>
+            </div>
+            <div class="hud-param-box">
+              <div class="hud-param-val" id="trackedNo2">38.5</div>
+              <div class="hud-param-label">NO₂ (µg/m³)</div>
+              <span class="hud-param-std">Limit: 80</span>
+            </div>
+            <div class="hud-param-box">
+              <div class="hud-param-val" id="trackedSo2">11.2</div>
+              <div class="hud-param-label">SO₂ (µg/m³)</div>
+              <span class="hud-param-std">Limit: 80</span>
+            </div>
+            <div class="hud-param-box">
+              <div class="hud-param-val" id="trackedCo">1.4</div>
+              <div class="hud-param-label">CO (mg/m³)</div>
+              <span class="hud-param-std">Limit: 4.0</span>
+            </div>
+            <div class="hud-param-box">
+              <div class="hud-param-val" id="trackedOzone">28.0</div>
+              <div class="hud-param-label">Ozone (µg/m³)</div>
+              <span class="hud-param-std">Limit: 100</span>
+            </div>
+          </div>
+
+          <!-- Water Cell for this Station -->
+          <div class="hud-water-section">
+            <div class="hud-subhead">
+              <span>💧 NEARBY WATER BODY & BASIN</span>
+              <strong id="trackedWaterBody">Adyar River Stormwater Channel</strong>
+            </div>
+            <div class="hud-water-metrics">
+              <div class="hw-item">
+                <span class="hw-label">TDS</span>
+                <strong class="hw-val" id="trackedWaterTds">380 ppm</strong>
+              </div>
+              <div class="hw-item">
+                <span class="hw-label">pH</span>
+                <strong class="hw-val" id="trackedWaterPh">7.4</strong>
+              </div>
+              <div class="hw-item">
+                <span class="hw-label">DO</span>
+                <strong class="hw-val" id="trackedWaterDo">2.1 mg/L</strong>
+              </div>
+              <div class="hw-item">
+                <span class="hw-label">BOD</span>
+                <strong class="hw-val" id="trackedWaterBod">18.0 mg/L</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Identified Primary Root Causes for this Station from Dataset -->
+          <div class="hud-causes-container">
+            <div class="hud-cause-block">
+              <div class="cause-block-header">
+                <span class="cause-icon">🏭</span>
+                <strong class="cause-title">Identified Air Pollution Causes</strong>
+              </div>
+              <ul class="cause-list" id="trackedAirCausesList">
+                <li>Heavy diesel bus and vehicular exhaust at GST Road arterial junction</li>
+                <li>Frequent traffic bottlenecks at Kathipara flyover intersection</li>
+              </ul>
+            </div>
+
+            <div class="hud-cause-block">
+              <div class="cause-block-header">
+                <span class="cause-icon">🚰</span>
+                <strong class="cause-title">Identified Water Contaminants</strong>
+              </div>
+              <ul class="cause-list" id="trackedWaterCausesList">
+                <li>Stormwater drains carrying unauthorized domestic greywater</li>
+                <li>Commercial market runoff entering stormwater networks</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="hud-footer-actions">
+            <a id="trackedOfficialPortalLink" href="https://app.cpcbccr.com/AQI_India/" target="_blank" class="btn btn-secondary btn-full">
+              <span>Visit Official Government Portal</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+            </a>
+            <button id="deepTelemetryBtn" class="btn btn-primary btn-full">
+              <span>Inspect Deep Telemetry & Dials</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Side-by-Side Station Comparator Modal Backdrop -->
+  <div class="comparator-modal-backdrop hidden" id="comparatorModal">
+    <div class="comparator-modal-card">
+      <div class="comparator-header">
+        <div>
+          <h3>Station Side-by-Side Environmental Comparator</h3>
+          <p>Cross-analyze any two monitoring locations across Greater Chennai</p>
+        </div>
+        <button id="closeComparatorBtn" class="btn-close-modal">✕</button>
+      </div>
+      <div class="comparator-selectors">
+        <div class="comp-col">
+          <label for="compSelectA">Station A</label>
+          <select id="compSelectA" class="form-control"></select>
+        </div>
+        <div class="comp-vs">VS</div>
+        <div class="comp-col">
+          <label for="compSelectB">Station B</label>
+          <select id="compSelectB" class="form-control"></select>
+        </div>
+      </div>
+      <div class="comparator-content" id="comparatorComparisonContent">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       TAB 1: LIVE DASHBOARD & DETAILED DIALS
+  ========================================================= -->
+  <main class="dashboard-wrapper tab-content" id="tab-overview">
+    <!-- Left Column: Hero Eco Score & Metrics -->
+    <section class="left-section">
+      <!-- Hero Score Card -->
+      <div class="hero-score-card" id="scoreCard">
+        <div class="score-card-header">
+          <div class="score-meta">
+            <span class="score-heading">COMPOSITE ENVIRONMENTAL HEALTH INDEX</span>
+            <h2 class="current-location-text" id="displayLocation">Alandur Bus Depot, Chennai</h2>
+          </div>
+          <div class="score-badge" id="scoreStatusBadge">Moderate</div>
+        </div>
+
+        <div class="score-meter-container">
+          <div class="gauge-wrap">
+            <svg class="radial-gauge" viewBox="0 0 160 160">
+              <circle class="gauge-bg" cx="80" cy="80" r="66" />
+              <circle class="gauge-progress" id="gaugeProgressCircle" cx="80" cy="80" r="66" />
+            </svg>
+            <div class="gauge-inner">
+              <span class="gauge-val" id="scoreValue">66</span>
+              <span class="gauge-denom">/ 100</span>
+            </div>
+          </div>
+          <div class="gauge-description">
+            <p id="scoreDescription">Calculating aggregate index from real-time air, water, and climate parameters...</p>
+            <div class="last-updated" id="lastUpdatedTime">Indian Standard Time (IST) Real-Time Synchronized</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Station Meta & Live Link Banner -->
+      <div class="station-meta-banner" id="stationMetaBanner">
+        <div class="station-badge-row">
+          <span class="station-code-badge" id="stationCode">CPCB_TN_CHN_ALN</span>
+          <span class="station-agency-text" id="stationAgency">Central Pollution Control Board (CPCB) & TNPCB</span>
+        </div>
+        <div class="station-source-link">
+          <a id="stationPortalLink" href="https://app.cpcbccr.com/AQI_India/" target="_blank" rel="noopener noreferrer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span>Live Feed: app.cpcbccr.com</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Core Telemetry Grid (4 items) -->
+      <div class="section-heading-row">
+        <h3>Primary Atmospheric & Water Parameters</h3>
+        <span class="badge-live-pulse">24/7 Automated Feed</span>
+      </div>
+
+      <div class="indicators-grid" id="indicatorsGrid">
+        <div class="indicator-card" id="card-air">
+          <div class="ind-top">
+            <div class="ind-icon-wrap ind-air"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h11.5a2.5 2.5 0 0 1 0 5H2"/><path d="M9 16h8.5a2.5 2.5 0 0 0 0-5H2"/></svg></div>
+            <span class="ind-unit">AQI</span>
+          </div>
+          <div class="ind-val-box">
+            <span class="ind-val" id="valAqi">--</span>
+            <span class="ind-status-tag" id="statusAqi">Moderate</span>
+          </div>
+          <span class="ind-label">Air Quality Index</span>
+        </div>
+
+        <div class="indicator-card" id="card-temp">
+          <div class="ind-top">
+            <div class="ind-icon-wrap ind-temp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg></div>
+            <span class="ind-unit">°C</span>
+          </div>
+          <div class="ind-val-box">
+            <span class="ind-val" id="valTemp">--</span>
+            <span class="ind-status-tag" id="statusTemp">Warm</span>
+          </div>
+          <span class="ind-label">Surface Temperature</span>
+        </div>
+
+        <div class="indicator-card" id="card-hum">
+          <div class="ind-top">
+            <div class="ind-icon-wrap ind-hum"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+            <span class="ind-unit">%</span>
+          </div>
+          <div class="ind-val-box">
+            <span class="ind-val" id="valHum">--</span>
+            <span class="ind-status-tag" id="statusHum">Optimal</span>
+          </div>
+          <span class="ind-label">Relative Humidity</span>
+        </div>
+
+        <div class="indicator-card" id="card-tds">
+          <div class="ind-top">
+            <div class="ind-icon-wrap ind-tds"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <span class="ind-unit">ppm</span>
+          </div>
+          <div class="ind-val-box">
+            <span class="ind-val" id="valTds">--</span>
+            <span class="ind-status-tag" id="statusTds">Good</span>
+          </div>
+          <span class="ind-label">Water Purity (TDS)</span>
+        </div>
+      </div>
+
+      <!-- Chemical & Particulate Mini Grid -->
+      <div class="section-heading-row">
+        <h3>Specific Chemical Pollutants & Dissolved Matter</h3>
+        <span class="sub-badge">NAAQS Standards</span>
+      </div>
+
+      <div class="pollutants-mini-grid">
+        <div class="pollutant-pill">
+          <span class="pol-name">PM2.5 (Fine)</span>
+          <span class="pol-val" id="valPm25">-- µg/m³</span>
+          <span class="pol-limit">NAAQS: &lt;60</span>
+        </div>
+        <div class="pollutant-pill">
+          <span class="pol-name">PM10 (Coarse)</span>
+          <span class="pol-val" id="valPm10">-- µg/m³</span>
+          <span class="pol-limit">NAAQS: &lt;100</span>
+        </div>
+        <div class="pollutant-pill">
+          <span class="pol-name">NO₂ (Nitrogen)</span>
+          <span class="pol-val" id="valNo2">-- µg/m³</span>
+          <span class="pol-limit">NAAQS: &lt;80</span>
+        </div>
+        <div class="pollutant-pill">
+          <span class="pol-name">SO₂ (Sulphur)</span>
+          <span class="pol-val" id="valSo2">-- µg/m³</span>
+          <span class="pol-limit">NAAQS: &lt;80</span>
+        </div>
+        <div class="pollutant-pill">
+          <span class="pol-name">Water DO</span>
+          <span class="pol-val" id="valWaterDo">-- mg/L</span>
+          <span class="pol-limit">CPCB: &gt;4.0</span>
+        </div>
+        <div class="pollutant-pill">
+          <span class="pol-name">Water BOD</span>
+          <span class="pol-val" id="valWaterBod">-- mg/L</span>
+          <span class="pol-limit">CPCB: &lt;3.0</span>
+        </div>
+      </div>
+
+      <!-- Root Causes Analysis Dual Grid -->
+      <div class="causes-container" id="causesContainer">
+        <div class="section-heading-row">
+          <h3>Official Identified Root Causes</h3>
+          <span class="sub-badge">Pollution Source Audit</span>
+        </div>
+        <div class="causes-dual-grid">
+          <div class="cause-box air-cause-box">
+            <div class="cause-box-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h11.5a2.5 2.5 0 0 1 0 5H2"/><path d="M9 16h8.5a2.5 2.5 0 0 0 0-5H2"/></svg>
+              <span>Key Air Pollution Drivers</span>
+            </div>
+            <ul id="airCausesList" class="causes-list"></ul>
+          </div>
+          <div class="cause-box water-cause-box">
+            <div class="cause-box-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              <span>Water Pollution Drivers (<span id="nearbyWaterbodyLabel">Basin</span>)</span>
+            </div>
+            <ul id="waterCausesList" class="causes-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Alerts Banner -->
+      <div class="alerts-section">
+        <div class="section-heading-row">
+          <h3>Health Advisories & Public Warnings</h3>
+        </div>
+        <div id="alertsContainer" class="alerts-list"></div>
+      </div>
+    </section>
+
+    <!-- Right Column: Regional Zones, Forecast & Recommendations -->
+    <section class="right-section">
+      <!-- 24-Hour Trend Chart -->
+      <div class="glass-card trend-card">
+        <div class="card-header-flex">
+          <h3>24-Hour Predictive Trend Curve</h3>
+          <span class="sub-badge">Hourly IST Forecast</span>
+        </div>
+        <div class="trend-bars-wrapper" id="trendBarsContainer"></div>
+      </div>
+
+      <!-- Qualitative Analysis -->
+      <div class="glass-card analysis-card">
+        <h3>Environmental Assessment & Scientific Advisory</h3>
+        <div class="analysis-list" id="analysisContainer"></div>
+      </div>
+
+      <!-- Actionable Recommendations -->
+      <div class="glass-card recommendations-card">
+        <div class="card-header-flex">
+          <h3>Citizen Actionable Protocols</h3>
+          <span class="pill-green">Recommended</span>
+        </div>
+        <ul class="rec-list" id="recommendationsList"></ul>
+      </div>
+
+      <!-- Monitored Locations Comparison -->
+      <div class="glass-card zones-card">
+        <div class="card-header-flex">
+          <h3>Chennai Monitored Stations (<span id="totalStationsCount">26 Areas</span>)</h3>
+          <span class="pill-green">Live CAAQMS</span>
+        </div>
+        <div class="zone-filter-bar" id="zoneFilterBar">
+          <button class="filter-btn active" data-filter="all">All (26)</button>
+          <button class="filter-btn" data-filter="North">North Chennai</button>
+          <button class="filter-btn" data-filter="Central">Central Chennai</button>
+          <button class="filter-btn" data-filter="South">South & OMR</button>
+          <button class="filter-btn" data-filter="West">West & Reservoirs</button>
+          <button class="filter-btn" data-filter="Water">Rivers & Canals</button>
+        </div>
+        <div class="zones-grid" id="zonesGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================
+       TAB 2: 26 STATIONS COMPLIANCE MATRIX (TABLE)
+  ========================================================= -->
+  <section class="tab-content" id="tab-stations">
+    <div class="portal-full-section">
+      <div class="section-title-bar">
+        <div>
+          <h2>Chennai CAAQMS 26-Station Compliance Matrix</h2>
+          <p class="section-subtitle">Real-time measurements audited against National Ambient Air Quality Standards (NAAQS - CPCB).</p>
+        </div>
+        <div class="table-actions">
+          <input type="text" id="stationTableSearch" class="search-input" placeholder="Search station (e.g. Manali, Velachery)...">
+          <button class="btn btn-primary" onclick="exportDatasetToCSV()">Download CSV</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="compliance-table" id="complianceTable">
+          <thead>
+            <tr>
+              <th>Station Code</th>
+              <th>Monitoring Station / Area</th>
+              <th>Zone</th>
+              <th>AQI</th>
+              <th>Status</th>
+              <th>PM2.5 (µg/m³)</th>
+              <th>PM10 (µg/m³)</th>
+              <th>NO₂ (µg/m³)</th>
+              <th>SO₂ (µg/m³)</th>
+              <th>Water TDS</th>
+              <th>Agency & Portal</th>
+            </tr>
+          </thead>
+          <tbody id="complianceTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       TAB 3: RIVERS & WATER BODIES MONITORING CELL
+  ========================================================= -->
+  <section class="tab-content" id="tab-water">
+    <div class="portal-full-section">
+      <div class="section-title-bar">
+        <div>
+          <h2>Chennai Surface Water Bodies, Rivers & Reservoirs Cell</h2>
+          <p class="section-subtitle">Water quality status audited under National Water Quality Monitoring Programme (NWMP) & CMWSSB.</p>
+        </div>
+      </div>
+
+      <!-- Water Bodies Grid -->
+      <div class="water-bodies-grid" id="waterBodiesGrid"></div>
+
+      <!-- CPCB Water Criteria Reference Card -->
+      <div class="glass-card criteria-card">
+        <h3>CPCB Surface Water Quality Classification Criteria</h3>
+        <div class="criteria-table-wrap">
+          <table class="criteria-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Designated Best Use</th>
+                <th>Dissolved Oxygen (DO)</th>
+                <th>Biochemical Oxygen Demand (BOD)</th>
+                <th>Total Dissolved Solids (TDS)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge-class class-a">Class A</span></td>
+                <td>Drinking water source without conventional treatment</td>
+                <td>&ge; 6.0 mg/L</td>
+                <td>&le; 2.0 mg/L</td>
+                <td>&le; 500 ppm</td>
+              </tr>
+              <tr>
+                <td><span class="badge-class class-b">Class B</span></td>
+                <td>Outdoor bathing (Organized)</td>
+                <td>&ge; 5.0 mg/L</td>
+                <td>&le; 3.0 mg/L</td>
+                <td>&le; 1,000 ppm</td>
+              </tr>
+              <tr>
+                <td><span class="badge-class class-c">Class C</span></td>
+                <td>Drinking water source with conventional treatment</td>
+                <td>&ge; 4.0 mg/L</td>
+                <td>&le; 3.0 mg/L</td>
+                <td>&le; 1,500 ppm</td>
+              </tr>
+              <tr>
+                <td><span class="badge-class class-d">Class D</span></td>
+                <td>Propagation of wildlife and fisheries</td>
+                <td>&ge; 4.0 mg/L</td>
+                <td>--</td>
+                <td>--</td>
+              </tr>
+              <tr>
+                <td><span class="badge-class class-e">Class E</span></td>
+                <td>Irrigation, industrial cooling & waste disposal</td>
+                <td>--</td>
+                <td>&le; 30.0 mg/L</td>
+                <td>&le; 2,100 ppm</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       TAB 4: CAUSES & GRADED RESPONSE ACTION PLAN (GRAP)
+  ========================================================= -->
+  <section class="tab-content" id="tab-grap">
+    <div class="portal-full-section">
+      <div class="section-title-bar">
+        <div>
+          <h2>Pollution Source Audit & Graded Response Action Plan (GRAP)</h2>
+          <p class="section-subtitle">Multi-agency emergency mitigation measures mandated for Greater Chennai Corporation.</p>
+        </div>
+      </div>
+
+      <div class="grap-stages-grid">
+        <div class="grap-card stage-1">
+          <div class="grap-header">
+            <span class="stage-tag">STAGE I • POOR</span>
+            <h4>AQI 201 – 300</h4>
+          </div>
+          <ul class="grap-measures">
+            <li>Strict enforcement of ban on open garbage burning across landfills (Kodungaiyur & Perungudi).</li>
+            <li>Mechanized sweeping and water sprinkling on arterial roads (GST Road, Inner Ring Road, OMR).</li>
+            <li>Strict pollution-under-control (PUC) checks for heavy diesel commercial vehicles.</li>
+          </ul>
+        </div>
+
+        <div class="grap-card stage-2">
+          <div class="grap-header">
+            <span class="stage-tag">STAGE II • VERY POOR</span>
+            <h4>AQI 301 – 400</h4>
+          </div>
+          <ul class="grap-measures">
+            <li>Ban on usage of diesel generator (DG) sets across commercial malls and corporate IT parks.</li>
+            <li>Ennore & Manali industrial units ordered to curb production capacity by 20%.</li>
+            <li>Enhanced frequency of Chennai Metro rail and MTC electric bus fleets to reduce private vehicle transit.</li>
+          </ul>
+        </div>
+
+        <div class="grap-card stage-3">
+          <div class="grap-header">
+            <span class="stage-tag">STAGE III • SEVERE</span>
+            <h4>AQI 401 – 450</h4>
+          </div>
+          <ul class="grap-measures">
+            <li>Immediate halt on all construction and demolition (C&D) operations across Greater Chennai.</li>
+            <li>Strict ban on entry of non-essential diesel container trucks into Chennai Port through city limits.</li>
+            <li>Closure of stone crushers, brick kilns, and hot mix plants in Chennai Metropolitan Area.</li>
+          </ul>
+        </div>
+
+        <div class="grap-card stage-4">
+          <div class="grap-header">
+            <span class="stage-tag">STAGE IV • SEVERE+</span>
+            <h4>AQI &gt; 450 (EMERGENCY)</h4>
+          </div>
+          <ul class="grap-measures">
+            <li>Mandatory work-from-home (WFH) for 50% staff across government and private offices.</li>
+            <li>Physical school closure for primary and middle school students; shift to online classes.</li>
+            <li>Consideration of odd-even vehicular rationing on major arterial roads.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       TAB 5: CITIZEN SERVICES & GRIEVANCE REPORTING
+  ========================================================= -->
+  <section class="tab-content" id="tab-citizen">
+    <div class="portal-full-section">
+      <div class="section-title-bar">
+        <div>
+          <h2>Public Services, Data Downloads & Citizen Grievance Cell</h2>
+          <p class="section-subtitle">File environmental complaints or download public domain telemetry datasets.</p>
+        </div>
+      </div>
+
+      <div class="citizen-dual-container">
+        <!-- Download Box -->
+        <div class="glass-card citizen-download-box">
+          <div class="download-icon-circle">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          </div>
+          <h3>Official Chennai Environmental Dataset (.CSV)</h3>
+          <p>Download complete telemetry comprising 26 continuous monitoring stations, air pollutants (PM2.5, PM10, NO₂, SO₂, CO, O₃), water parameters (TDS, pH, DO, BOD), and local pollution causes.</p>
+          <button class="btn btn-primary btn-large" onclick="exportDatasetToCSV()">
+            <span>Download Dataset (26 Stations CSV)</span>
+          </button>
+          <div class="api-direct-link">
+            <span>Direct JSON REST API: </span>
+            <a href="/api/chennai/complete-dataset" target="_blank">/api/chennai/complete-dataset</a>
+          </div>
+        </div>
+
+        <!-- Citizen Grievance Form -->
+        <div class="glass-card grievance-form-box">
+          <h3>Report Environmental Violation / Incident</h3>
+          <form id="grievanceForm" onsubmit="handleGrievanceSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="reporterName">Citizen Name</label>
+                <input type="text" id="reporterName" required placeholder="Your full name">
+              </div>
+              <div class="form-group">
+                <label for="reporterPhone">Contact Phone</label>
+                <input type="tel" id="reporterPhone" required placeholder="+91 98765 43210">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="incidentLocation">Incident Location / Ward</label>
+              <input type="text" id="incidentLocation" required placeholder="e.g. Manali Industrial Gate, Cooum near Aminjikarai">
+            </div>
+            <div class="form-group">
+              <label for="incidentType">Violation Category</label>
+              <select id="incidentType" required>
+                <option value="Open Waste/Plastic Burning">Open Waste / Plastic Burning</option>
+                <option value="Industrial Dark Smoke Emission">Industrial Dark Smoke Emission</option>
+                <option value="Untreated Sewage Discharge into River/Drain">Untreated Sewage Discharge into River/Drain</option>
+                <option value="Illegal Septic Tanker Dumping">Illegal Septic Tanker Dumping</option>
+                <option value="Construction Dust / Uncovered Transport">Construction Dust / Uncovered Transport</option>
+                <option value="Other Environmental Concern">Other Environmental Concern</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="incidentDescription">Detailed Description</label>
+              <textarea id="incidentDescription" rows="3" required placeholder="Describe the environmental incident, frequency, and exact landmark..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <span>Submit Official Report</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Official Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <p><strong>EAS — Environmental Analyzing System (Chennai Network)</strong></p>
+        <p>Managed in technical alignment with Central Pollution Control Board (CPCB) and Tamil Nadu Pollution Control Board (TNPCB).</p>
+      </div>
+      <div class="footer-right">
+        <p>National Air Quality Standards (NAQS) Compliant • Public Domain Information</p>
+        <p>© 2026 Government of Tamil Nadu. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/static/libs/leaflet/leaflet.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

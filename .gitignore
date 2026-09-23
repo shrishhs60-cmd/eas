@@ -1,0 +1,39 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# Large installers & tool binaries
+*.exe
+*.msi
+*.vsix
+cloudflared.exe
+
+# Python Virtual Environments
+.venv/
+venv/
+__pycache__/
+
+# Local SDK checkout
+flutter/
+
+# IntelliJ / VS Code
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Flutter build & tool artifacts
+**/doc/api/
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
