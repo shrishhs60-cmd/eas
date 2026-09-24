@@ -375,8 +375,13 @@ def api_info():
 
 
 @app.get("/flutter")
+@app.get("/flutter/")
 def serve_flutter():
-    return RedirectResponse(url="/flutter/")
+    if os.path.exists(FLUTTER_WEB_FOLDER):
+        index_flutter = os.path.join(FLUTTER_WEB_FOLDER, "index.html")
+        if os.path.exists(index_flutter):
+            return FileResponse(index_flutter)
+    return RedirectResponse(url="/eas")
 
 
 @app.get("/api/realtime/live-status")

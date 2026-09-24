@@ -42,7 +42,8 @@ class MainDashboardScreen extends StatefulWidget {
   State<MainDashboardScreen> createState() => _MainDashboardScreenState();
 }
 
-class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTickerProviderStateMixin {
+class _MainDashboardScreenState extends State<MainDashboardScreen>
+    with SingleTickerProviderStateMixin {
   int _currentTabIndex = 0;
   String _selectedLocation = 'Alandur Bus Depot, Chennai';
   List<LocationItem> _stations = [];
@@ -78,7 +79,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     setState(() => _isLoading = true);
     final isOnline = await EcoApiService.isBackendOnline();
     final stations = await EcoApiService.fetchLocations();
-    final dashboard = await EcoApiService.fetchDashboard(location: _selectedLocation);
+    final dashboard =
+        await EcoApiService.fetchDashboard(location: _selectedLocation);
     final telemetry = await EcoApiService.fetchLiveTelemetryFeed();
 
     if (mounted) {
@@ -108,7 +110,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
             SizedBox(
               width: 18,
               height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF6EE7B7)),
+              child: CircularProgressIndicator(
+                  strokeWidth: 2, color: Color(0xFF6EE7B7)),
             ),
             SizedBox(width: 12),
             Text(
@@ -122,7 +125,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     );
 
     final res = await EcoApiService.triggerSatelliteSync();
-    final dashboard = await EcoApiService.fetchDashboard(location: _selectedLocation);
+    final dashboard =
+        await EcoApiService.fetchDashboard(location: _selectedLocation);
     final stations = await EcoApiService.fetchLocations();
     final telemetry = await EcoApiService.fetchLiveTelemetryFeed();
 
@@ -139,8 +143,11 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
         SnackBar(
           backgroundColor: const Color(0xFF10B981),
           content: Text(
-            res != null ? '✅ Live satellite telemetry successfully synced across all 26 stations!' : 'Satellite sync updated.',
-            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            res != null
+                ? '✅ Live satellite telemetry successfully synced across all 26 stations!'
+                : 'Satellite sync updated.',
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
           ),
           duration: const Duration(seconds: 3),
         ),
@@ -182,7 +189,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               backgroundColor: const Color(0xFF10B981),
               content: Text(
                 'Incident successfully logged! Official Ticket ID: $ticketId routed to TNPCB Flying Squad.',
-                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
               ),
               duration: const Duration(seconds: 5),
             ),
@@ -263,7 +271,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
             'CPCB NAQI • TNPCB CAAQMS • 26 STATIONS',
             style: TextStyle(
               fontSize: 10,
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -279,9 +287,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF10221C).withOpacity(0.85),
+        color: const Color(0xFF10221C).withValues(alpha: 0.85),
         border: Border(
-          bottom: BorderSide(color: const Color(0xFF74DE80).withOpacity(0.12)),
+          bottom: BorderSide(
+              color: const Color(0xFF74DE80).withValues(alpha: 0.12)),
         ),
       ),
       child: LayoutBuilder(
@@ -296,11 +305,14 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.15),
+                      color: const Color(0xFF10B981).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFF10B981).withOpacity(0.3)),
+                      border: Border.all(
+                          color:
+                              const Color(0xFF10B981).withValues(alpha: 0.3)),
                     ),
-                    child: const Icon(Icons.eco, color: Color(0xFF10B981), size: 22),
+                    child: const Icon(Icons.eco,
+                        color: Color(0xFF10B981), size: 22),
                   ),
                   const SizedBox(width: 12),
                   Column(
@@ -320,11 +332,15 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF10B981).withOpacity(0.2),
+                              color: const Color(0xFF10B981)
+                                  .withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: const Color(0xFF10B981).withOpacity(0.4)),
+                              border: Border.all(
+                                  color: const Color(0xFF10B981)
+                                      .withValues(alpha: 0.4)),
                             ),
                             child: const Text(
                               'OFFICIAL GRID',
@@ -343,7 +359,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                           'Greater Chennai Real-Time Atmospheric & Aquatic Telemetry',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                           ),
                         ),
                     ],
@@ -355,11 +371,13 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
 
               // Live Status Pill
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFF162B24),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.25)),
+                  border: Border.all(
+                      color: const Color(0xFF74DE80).withValues(alpha: 0.25)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -397,21 +415,30 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   decoration: BoxDecoration(
                     color: const Color(0xFF162B24),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.25)),
+                    border: Border.all(
+                        color: const Color(0xFF74DE80).withValues(alpha: 0.25)),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
-                      value: _stations.any((s) => s.location == _selectedLocation) ? _selectedLocation : _stations.first.location,
+                      value:
+                          _stations.any((s) => s.location == _selectedLocation)
+                              ? _selectedLocation
+                              : _stations.first.location,
                       dropdownColor: const Color(0xFF162B24),
-                      icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF10B981)),
-                      style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                      icon: const Icon(Icons.arrow_drop_down,
+                          color: Color(0xFF10B981)),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
                       onChanged: (val) {
                         if (val != null) _onLocationSelected(val);
                       },
                       items: _stations.map((s) {
                         return DropdownMenuItem<String>(
                           value: s.location,
-                          child: Text(s.location, overflow: TextOverflow.ellipsis),
+                          child:
+                              Text(s.location, overflow: TextOverflow.ellipsis),
                         );
                       }).toList(),
                     ),
@@ -427,18 +454,22 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                     ? const SizedBox(
                         width: 14,
                         height: 14,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.black),
                       )
                     : const Icon(Icons.satellite_alt, size: 16),
                 label: Text(
                   _isSyncing ? 'SYNCING...' : 'SYNC SATELLITE',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 12),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF10B981),
                   foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
               ),
 
@@ -447,15 +478,21 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               // Citizen Grievance Button
               OutlinedButton.icon(
                 onPressed: _openGrievanceModal,
-                icon: const Icon(Icons.report_problem, size: 16, color: Color(0xFFF59E0B)),
+                icon: const Icon(Icons.report_problem,
+                    size: 16, color: Color(0xFFF59E0B)),
                 label: const Text(
                   'GRIEVANCE',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFF59E0B)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Color(0xFFF59E0B)),
                 ),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFF59E0B)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
               ),
             ],
@@ -490,7 +527,9 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF10B981)
+                        : Colors.transparent,
                     width: 3,
                   ),
                 ),
@@ -500,14 +539,16 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   Icon(
                     item['icon'] as IconData,
                     size: 16,
-                    color: isSelected ? const Color(0xFF10B981) : Colors.white60,
+                    color:
+                        isSelected ? const Color(0xFF10B981) : Colors.white60,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     item['title'] as String,
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.w500,
                       color: isSelected ? Colors.white : Colors.white60,
                       letterSpacing: 0.5,
                     ),
@@ -540,13 +581,15 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF10221C).withOpacity(0.7),
+              color: const Color(0xFF10221C).withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.18)),
+              border: Border.all(
+                  color: const Color(0xFF74DE80).withValues(alpha: 0.18)),
             ),
             child: Row(
               children: [
-                const Icon(Icons.location_on, color: Color(0xFF10B981), size: 28),
+                const Icon(Icons.location_on,
+                    color: Color(0xFF10B981), size: 28),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
@@ -565,7 +608,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                         '${d.stationType} • Station Code: ${d.officialStationCode} • Agency: ${d.officialMonitoringAgency}',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.white.withOpacity(0.65),
+                          color: Colors.white.withValues(alpha: 0.65),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -581,15 +624,20 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFF064E3B),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFF10B981).withOpacity(0.4)),
+                    border: Border.all(
+                        color: const Color(0xFF10B981).withValues(alpha: 0.4)),
                   ),
                   child: Text(
-                    'Updated: ${d.timestamp.contains("T") ? d.timestamp.split("T")[1].substring(0, 8) + " UTC" : "Live"}',
-                    style: const TextStyle(fontSize: 11, color: Color(0xFF6EE7B7), fontWeight: FontWeight.bold),
+                    'Updated: ${d.timestamp.contains("T") ? "${d.timestamp.split("T")[1].substring(0, 8)} UTC" : "Live"}',
+                    style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF6EE7B7),
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -663,9 +711,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF10221C).withOpacity(0.7),
+        color: const Color(0xFF10221C).withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.18)),
+        border:
+            Border.all(color: const Color(0xFF74DE80).withValues(alpha: 0.18)),
       ),
       child: Column(
         children: [
@@ -684,9 +733,9 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.18),
+                  color: statusColor.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: statusColor.withOpacity(0.5)),
+                  border: Border.all(color: statusColor.withValues(alpha: 0.5)),
                 ),
                 child: Text(
                   d.status.toUpperCase(),
@@ -704,7 +753,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
             width: 170,
             height: 170,
             child: CustomPaint(
-              painter: CircularScorePainter(score: d.score, scoreColor: statusColor),
+              painter:
+                  CircularScorePainter(score: d.score, scoreColor: statusColor),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -719,7 +769,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                     ),
                     const Text(
                       '/ 100',
-                      style: TextStyle(fontSize: 13, color: Colors.white54, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.white54,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -730,7 +783,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
           Text(
             'Overall Composite Environmental Quality Score for ${d.location.split(",").first}',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.7)),
+            style: TextStyle(
+                fontSize: 12, color: Colors.white.withValues(alpha: 0.7)),
           ),
         ],
       ),
@@ -753,11 +807,18 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     final int aqiInt = int.tryParse(aqiVal) ?? 72;
     final int tdsInt = int.tryParse(tdsVal) ?? 280;
 
-    String aqiStatus = aqiInt <= 50 ? 'Good' : (aqiInt <= 100 ? 'Moderate' : 'Unhealthy');
-    Color aqiColor = aqiInt <= 50 ? const Color(0xFF10B981) : (aqiInt <= 100 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
+    String aqiStatus =
+        aqiInt <= 50 ? 'Good' : (aqiInt <= 100 ? 'Moderate' : 'Unhealthy');
+    Color aqiColor = aqiInt <= 50
+        ? const Color(0xFF10B981)
+        : (aqiInt <= 100 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
 
-    String tdsStatus = tdsInt <= 300 ? 'Potable' : (tdsInt <= 600 ? 'Acceptable' : 'Elevated Runoff');
-    Color tdsColor = tdsInt <= 300 ? const Color(0xFF38BDF8) : (tdsInt <= 600 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
+    String tdsStatus = tdsInt <= 300
+        ? 'Potable'
+        : (tdsInt <= 600 ? 'Acceptable' : 'Elevated Runoff');
+    Color tdsColor = tdsInt <= 300
+        ? const Color(0xFF38BDF8)
+        : (tdsInt <= 600 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
 
     final metrics = [
       {
@@ -810,9 +871,9 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF10221C).withOpacity(0.7),
+            color: const Color(0xFF10221C).withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: col.withOpacity(0.25)),
+            border: Border.all(color: col.withValues(alpha: 0.25)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -827,7 +888,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.8,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                     ),
                   ),
                   Icon(m['icon'] as IconData, size: 20, color: col),
@@ -851,7 +912,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -859,7 +920,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                 decoration: BoxDecoration(
-                  color: col.withOpacity(0.12),
+                  color: col.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -882,18 +943,20 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     return Column(
       children: alerts.map((a) {
         final isWarning = a.type == 'warning' || a.type == 'danger';
-        final col = isWarning ? const Color(0xFFF59E0B) : const Color(0xFF10B981);
+        final col =
+            isWarning ? const Color(0xFFF59E0B) : const Color(0xFF10B981);
         return Container(
           margin: const EdgeInsets.only(bottom: 10),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: col.withOpacity(0.12),
+            color: col.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: col.withOpacity(0.4)),
+            border: Border.all(color: col.withValues(alpha: 0.4)),
           ),
           child: Row(
             children: [
-              Icon(isWarning ? Icons.warning_amber : Icons.verified, color: col, size: 26),
+              Icon(isWarning ? Icons.warning_amber : Icons.verified,
+                  color: col, size: 26),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -901,12 +964,17 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   children: [
                     Text(
                       a.title,
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: col),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: col),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       a.message,
-                      style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.8)),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.8)),
                     ),
                   ],
                 ),
@@ -922,9 +990,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF10221C).withOpacity(0.7),
+        color: const Color(0xFF10221C).withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.18)),
+        border:
+            Border.all(color: const Color(0xFF74DE80).withValues(alpha: 0.18)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -955,13 +1024,20 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: trend.map((item) {
                 final heightFactor = (item.aqi / 150.0).clamp(0.2, 1.0);
-                Color barColor = item.aqi <= 50 ? const Color(0xFF10B981) : (item.aqi <= 100 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
+                Color barColor = item.aqi <= 50
+                    ? const Color(0xFF10B981)
+                    : (item.aqi <= 100
+                        ? const Color(0xFFF59E0B)
+                        : const Color(0xFFEF4444));
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       '${item.aqi}',
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: barColor),
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: barColor),
                     ),
                     const SizedBox(height: 4),
                     Container(
@@ -971,7 +1047,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
-                          colors: [barColor.withOpacity(0.4), barColor],
+                          colors: [barColor.withValues(alpha: 0.4), barColor],
                         ),
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -979,11 +1055,13 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                     const SizedBox(height: 6),
                     Text(
                       item.hour,
-                      style: const TextStyle(fontSize: 10, color: Colors.white70),
+                      style:
+                          const TextStyle(fontSize: 10, color: Colors.white70),
                     ),
                     Text(
                       '${item.temperature.toStringAsFixed(0)}°C',
-                      style: const TextStyle(fontSize: 9, color: Color(0xFFFB923C)),
+                      style: const TextStyle(
+                          fontSize: 9, color: Color(0xFFFB923C)),
                     ),
                   ],
                 );
@@ -999,9 +1077,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF10221C).withOpacity(0.7),
+        color: const Color(0xFF10221C).withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.18)),
+        border:
+            Border.all(color: const Color(0xFF74DE80).withValues(alpha: 0.18)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1024,23 +1103,32 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.analytics, size: 16, color: Color(0xFF10B981)),
+                      const Icon(Icons.analytics,
+                          size: 16, color: Color(0xFF10B981)),
                       const SizedBox(width: 8),
                       Text(
                         ana.title,
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       const Spacer(),
                       Text(
                         ana.value,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF6EE7B7)),
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF6EE7B7)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
                     ana.description,
-                    style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.7)),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withValues(alpha: 0.7)),
                   ),
                 ],
               ),
@@ -1050,13 +1138,18 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
             const Divider(color: Colors.white12),
             const Text(
               'Observed Environmental Drivers:',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF38BDF8)),
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF38BDF8)),
             ),
             const SizedBox(height: 6),
             ...d.primaryAirCauses.map(
               (c) => Padding(
                 padding: const EdgeInsets.only(bottom: 3),
-                child: Text('• $c', style: const TextStyle(fontSize: 11, color: Colors.white60)),
+                child: Text('• $c',
+                    style:
+                        const TextStyle(fontSize: 11, color: Colors.white60)),
               ),
             ),
           ],
@@ -1069,9 +1162,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF10221C).withOpacity(0.7),
+        color: const Color(0xFF10221C).withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.18)),
+        border:
+            Border.all(color: const Color(0xFF74DE80).withValues(alpha: 0.18)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1100,7 +1194,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.15),
+                      color: const Color(0xFF10B981).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(icon, size: 16, color: const Color(0xFF10B981)),
@@ -1109,7 +1203,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   Expanded(
                     child: Text(
                       rec.text,
-                      style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.85), height: 1.3),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.85),
+                          height: 1.3),
                     ),
                   ),
                 ],
@@ -1125,7 +1222,14 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
   // TAB 1: EAS LIVE RADAR / MAP
   // ====================================================
   Widget _buildLiveRadarTab() {
-    final zones = ['All', 'North Chennai', 'Central Chennai', 'South Chennai', 'West Chennai', 'Coastal Basin'];
+    final zones = [
+      'All',
+      'North Chennai',
+      'Central Chennai',
+      'South Chennai',
+      'West Chennai',
+      'Coastal Basin'
+    ];
 
     final filteredStations = _stations.where((s) {
       if (_selectedZoneFilter == 'All') return true;
@@ -1142,16 +1246,19 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
             decoration: BoxDecoration(
               color: const Color(0xFF07120E),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.2)),
+              border: Border.all(
+                  color: const Color(0xFF74DE80).withValues(alpha: 0.2)),
             ),
             child: Column(
               children: [
                 // Radar Top Control Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Row(
                     children: [
-                      const Icon(Icons.radar, color: Color(0xFF10B981), size: 20),
+                      const Icon(Icons.radar,
+                          color: Color(0xFF10B981), size: 20),
                       const SizedBox(width: 8),
                       const Text(
                         'EAS CHENNAI ENVIRONMENTAL RADAR (26 NODES)',
@@ -1169,11 +1276,16 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                         children: zones.map((z) {
                           final isSel = _selectedZoneFilter == z;
                           return ChoiceChip(
-                            label: Text(z, style: TextStyle(fontSize: 10, color: isSel ? Colors.black : Colors.white70)),
+                            label: Text(z,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color:
+                                        isSel ? Colors.black : Colors.white70)),
                             selected: isSel,
                             selectedColor: const Color(0xFF10B981),
                             backgroundColor: const Color(0xFF162B24),
-                            onSelected: (_) => setState(() => _selectedZoneFilter = z),
+                            onSelected: (_) =>
+                                setState(() => _selectedZoneFilter = z),
                             visualDensity: VisualDensity.compact,
                           );
                         }).toList(),
@@ -1192,7 +1304,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                           LocationItem? closest;
                           double minDist = 30.0;
                           for (var s in filteredStations) {
-                            final pos = _convertCoordsToCanvas(s.latitude, s.longitude, constraints.biggest);
+                            final pos = _convertCoordsToCanvas(
+                                s.latitude, s.longitude, constraints.biggest);
                             final dist = (pos - tapPos).distance;
                             if (dist < minDist) {
                               minDist = dist;
@@ -1231,12 +1344,15 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
             margin: const EdgeInsets.only(top: 20, right: 20, bottom: 20),
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF10221C).withOpacity(0.85),
+              color: const Color(0xFF10221C).withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.2)),
+              border: Border.all(
+                  color: const Color(0xFF74DE80).withValues(alpha: 0.2)),
             ),
             child: _selectedMapStation == null
-                ? const Center(child: Text('Tap any station dot on radar to inspect live telemetry.'))
+                ? const Center(
+                    child: Text(
+                        'Tap any station dot on radar to inspect live telemetry.'))
                 : _buildStationInspectorHud(_selectedMapStation!),
           ),
         ),
@@ -1258,7 +1374,11 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
   }
 
   Widget _buildStationInspectorHud(LocationItem s) {
-    Color statusColor = s.airQuality <= 50 ? const Color(0xFF10B981) : (s.airQuality <= 100 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
+    Color statusColor = s.airQuality <= 50
+        ? const Color(0xFF10B981)
+        : (s.airQuality <= 100
+            ? const Color(0xFFF59E0B)
+            : const Color(0xFFEF4444));
 
     return SingleChildScrollView(
       child: Column(
@@ -1270,45 +1390,61 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withOpacity(0.2),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
                   s.agency.toUpperCase(),
-                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF6EE7B7)),
+                  style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF6EE7B7)),
                 ),
               ),
               Text(
                 'Score: ${s.latestScore}/100',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: statusColor),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: statusColor),
               ),
             ],
           ),
           const SizedBox(height: 8),
           Text(
             s.location,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           Text(
             '${s.zone} • Code: ${s.stationCode}',
-            style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.6)),
+            style: TextStyle(
+                fontSize: 11, color: Colors.white.withValues(alpha: 0.6)),
           ),
           const SizedBox(height: 16),
           // Live AQI Banner
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.12),
+              color: statusColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: statusColor.withOpacity(0.4)),
+              border: Border.all(color: statusColor.withValues(alpha: 0.4)),
             ),
             child: Row(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('REAL-TIME AQI', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white70)),
-                    Text('${s.airQuality}', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: statusColor)),
+                    const Text('REAL-TIME AQI',
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70)),
+                    Text('${s.airQuality}',
+                        style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w900,
+                            color: statusColor)),
                   ],
                 ),
                 const Spacer(),
@@ -1316,38 +1452,61 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.2),
+                        color: statusColor.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         s.status,
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: statusColor),
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: statusColor),
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text('CPCB Standards', style: TextStyle(fontSize: 10, color: Colors.white54)),
+                    const Text('CPCB Standards',
+                        style: TextStyle(fontSize: 10, color: Colors.white54)),
                   ],
                 ),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          const Text('ATMOSPHERIC POLLUTANTS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF6EE7B7), letterSpacing: 0.8)),
+          const Text('ATMOSPHERIC POLLUTANTS',
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF6EE7B7),
+                  letterSpacing: 0.8)),
           const SizedBox(height: 8),
-          _buildTelemetryParamRow('PM2.5 Particulate', '${s.pm25} µg/m³', s.pm25 > 60 ? Colors.redAccent : Colors.white),
-          _buildTelemetryParamRow('PM10 Coarse Particulate', '${s.pm10} µg/m³', s.pm10 > 100 ? Colors.redAccent : Colors.white),
-          _buildTelemetryParamRow('Nitrogen Dioxide (NO₂)', '${s.no2} µg/m³', Colors.white),
-          _buildTelemetryParamRow('Sulphur Dioxide (SO₂)', '${s.so2} µg/m³', Colors.white),
+          _buildTelemetryParamRow('PM2.5 Particulate', '${s.pm25} µg/m³',
+              s.pm25 > 60 ? Colors.redAccent : Colors.white),
+          _buildTelemetryParamRow('PM10 Coarse Particulate', '${s.pm10} µg/m³',
+              s.pm10 > 100 ? Colors.redAccent : Colors.white),
+          _buildTelemetryParamRow(
+              'Nitrogen Dioxide (NO₂)', '${s.no2} µg/m³', Colors.white),
+          _buildTelemetryParamRow(
+              'Sulphur Dioxide (SO₂)', '${s.so2} µg/m³', Colors.white),
 
           const SizedBox(height: 16),
-          const Text('AQUATIC PARAMETERS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF38BDF8), letterSpacing: 0.8)),
+          const Text('AQUATIC PARAMETERS',
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF38BDF8),
+                  letterSpacing: 0.8)),
           const SizedBox(height: 8),
-          _buildTelemetryParamRow('Adjacent Water Body', s.waterBodyNearby, const Color(0xFF38BDF8)),
-          _buildTelemetryParamRow('Water TDS', '${s.waterTds} ppm', s.waterTds > 600 ? Colors.amberAccent : Colors.white),
-          _buildTelemetryParamRow('Dissolved Oxygen', '${s.waterDo} mg/L', s.waterDo < 4.0 ? Colors.redAccent : const Color(0xFF6EE7B7)),
-          _buildTelemetryParamRow('Biochemical Oxygen Demand', '${s.waterBod} mg/L', Colors.white),
+          _buildTelemetryParamRow('Adjacent Water Body', s.waterBodyNearby,
+              const Color(0xFF38BDF8)),
+          _buildTelemetryParamRow('Water TDS', '${s.waterTds} ppm',
+              s.waterTds > 600 ? Colors.amberAccent : Colors.white),
+          _buildTelemetryParamRow('Dissolved Oxygen', '${s.waterDo} mg/L',
+              s.waterDo < 4.0 ? Colors.redAccent : const Color(0xFF6EE7B7)),
+          _buildTelemetryParamRow(
+              'Biochemical Oxygen Demand', '${s.waterBod} mg/L', Colors.white),
           _buildTelemetryParamRow('pH Level', '${s.waterPh}', Colors.white),
 
           const SizedBox(height: 20),
@@ -1364,7 +1523,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                 backgroundColor: const Color(0xFF10B981),
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ),
@@ -1379,8 +1539,13 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 11, color: Colors.white70)),
-          Text(value, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: valueColor)),
+          Text(label,
+              style: const TextStyle(fontSize: 11, color: Colors.white70)),
+          Text(value,
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: valueColor)),
         ],
       ),
     );
@@ -1391,10 +1556,12 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
   // ====================================================
   Widget _buildStationsGridTab() {
     final filtered = _stations.where((s) {
-      final matchesSearch = s.location.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          s.zone.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          s.stationCode.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchesZone = _selectedZoneFilter == 'All' || s.zone.toLowerCase().contains(_selectedZoneFilter.toLowerCase());
+      final matchesSearch =
+          s.location.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+              s.zone.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+              s.stationCode.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesZone = _selectedZoneFilter == 'All' ||
+          s.zone.toLowerCase().contains(_selectedZoneFilter.toLowerCase());
       return matchesSearch && matchesZone;
     }).toList();
 
@@ -1409,19 +1576,27 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                 child: TextField(
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search, color: Color(0xFF10B981), size: 20),
-                    hintText: 'Search all 26 Chennai CAAQMS stations by location, zone, or code...',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 13),
+                    prefixIcon: const Icon(Icons.search,
+                        color: Color(0xFF10B981), size: 20),
+                    hintText:
+                        'Search all 26 Chennai CAAQMS stations by location, zone, or code...',
+                    hintStyle: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.4),
+                        fontSize: 13),
                     filled: true,
                     fillColor: const Color(0xFF10221C),
                     contentPadding: const EdgeInsets.symmetric(vertical: 12),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: const Color(0xFF74DE80).withOpacity(0.2)),
+                      borderSide: BorderSide(
+                          color:
+                              const Color(0xFF74DE80).withValues(alpha: 0.2)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: const Color(0xFF74DE80).withOpacity(0.2)),
+                      borderSide: BorderSide(
+                          color:
+                              const Color(0xFF74DE80).withValues(alpha: 0.2)),
                     ),
                   ),
                   onChanged: (val) => setState(() => _searchQuery = val),
@@ -1430,7 +1605,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               const SizedBox(width: 14),
               Text(
                 'Showing ${filtered.length} of ${_stations.length} Official Stations',
-                style: const TextStyle(fontSize: 12, color: Color(0xFF6EE7B7), fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF6EE7B7),
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -1447,7 +1625,11 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
               itemBuilder: (context, idx) {
                 final s = filtered[idx];
                 final isSelected = s.location == _selectedLocation;
-                Color statusColor = s.airQuality <= 50 ? const Color(0xFF10B981) : (s.airQuality <= 100 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
+                Color statusColor = s.airQuality <= 50
+                    ? const Color(0xFF10B981)
+                    : (s.airQuality <= 100
+                        ? const Color(0xFFF59E0B)
+                        : const Color(0xFFEF4444));
 
                 return InkWell(
                   onTap: () {
@@ -1461,10 +1643,14 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: isSelected ? const Color(0xFF162B24) : const Color(0xFF10221C).withOpacity(0.7),
+                      color: isSelected
+                          ? const Color(0xFF162B24)
+                          : const Color(0xFF10221C).withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                        color: isSelected ? const Color(0xFF10B981) : const Color(0xFF74DE80).withOpacity(0.18),
+                        color: isSelected
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFF74DE80).withValues(alpha: 0.18),
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -1476,19 +1662,27 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 7, vertical: 2),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF10B981).withOpacity(0.18),
+                                color: const Color(0xFF10B981)
+                                    .withValues(alpha: 0.18),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
                                 s.zone,
-                                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF6EE7B7)),
+                                style: const TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF6EE7B7)),
                               ),
                             ),
                             Text(
                               'Score: ${s.latestScore}',
-                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: statusColor),
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: statusColor),
                             ),
                           ],
                         ),
@@ -1496,15 +1690,21 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                           s.location,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         Row(
                           children: [
-                            _buildMiniMetricChip('AQI', '${s.airQuality}', statusColor),
+                            _buildMiniMetricChip(
+                                'AQI', '${s.airQuality}', statusColor),
                             const SizedBox(width: 8),
-                            _buildMiniMetricChip('PM2.5', '${s.pm25}', Colors.white70),
+                            _buildMiniMetricChip(
+                                'PM2.5', '${s.pm25}', Colors.white70),
                             const SizedBox(width: 8),
-                            _buildMiniMetricChip('TDS', '${s.waterTds}', const Color(0xFF38BDF8)),
+                            _buildMiniMetricChip('TDS', '${s.waterTds}',
+                                const Color(0xFF38BDF8)),
                           ],
                         ),
                         Row(
@@ -1512,12 +1712,18 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                           children: [
                             Text(
                               s.agency,
-                              style: const TextStyle(fontSize: 10, color: Colors.white54),
+                              style: const TextStyle(
+                                  fontSize: 10, color: Colors.white54),
                             ),
                             const Row(
                               children: [
-                                Text('View Telemetry', style: TextStyle(fontSize: 11, color: Color(0xFF10B981), fontWeight: FontWeight.bold)),
-                                Icon(Icons.arrow_forward_ios, size: 10, color: Color(0xFF10B981)),
+                                Text('View Telemetry',
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color: Color(0xFF10B981),
+                                        fontWeight: FontWeight.bold)),
+                                Icon(Icons.arrow_forward_ios,
+                                    size: 10, color: Color(0xFF10B981)),
                               ],
                             ),
                           ],
@@ -1540,13 +1746,16 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
       decoration: BoxDecoration(
         color: const Color(0xFF0B1512),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: col.withOpacity(0.3)),
+        border: Border.all(color: col.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('$label: ', style: const TextStyle(fontSize: 10, color: Colors.white54)),
-          Text(value, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: col)),
+          Text('$label: ',
+              style: const TextStyle(fontSize: 10, color: Colors.white54)),
+          Text(value,
+              style: TextStyle(
+                  fontSize: 11, fontWeight: FontWeight.bold, color: col)),
         ],
       ),
     );
@@ -1572,20 +1781,26 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF10221C).withOpacity(0.7),
+              color: const Color(0xFF10221C).withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.18)),
+              border: Border.all(
+                  color: const Color(0xFF74DE80).withValues(alpha: 0.18)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.satellite_alt, color: Color(0xFF10B981), size: 20),
+                    Icon(Icons.satellite_alt,
+                        color: Color(0xFF10B981), size: 20),
                     SizedBox(width: 8),
                     Text(
                       'REAL-TIME SATELLITE ATMOSPHERIC TELEMETRY (ECMWF & OPEN-METEO)',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF6EE7B7), letterSpacing: 0.8),
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF6EE7B7),
+                          letterSpacing: 0.8),
                     ),
                   ],
                 ),
@@ -1593,11 +1808,16 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildWeatherStat('Wind Velocity', '$windSpd km/h', Icons.air),
-                    _buildWeatherStat('Wind Vector', '$windDir° (NW)', Icons.navigation),
-                    _buildWeatherStat('Barometric Pressure', '$pressure hPa', Icons.compress),
-                    _buildWeatherStat('Surface Temperature', '$temp°C', Icons.thermostat),
-                    _buildWeatherStat('Atmospheric Humidity', '$hum%', Icons.water_drop),
+                    _buildWeatherStat(
+                        'Wind Velocity', '$windSpd km/h', Icons.air),
+                    _buildWeatherStat(
+                        'Wind Vector', '$windDir° (NW)', Icons.navigation),
+                    _buildWeatherStat(
+                        'Barometric Pressure', '$pressure hPa', Icons.compress),
+                    _buildWeatherStat(
+                        'Surface Temperature', '$temp°C', Icons.thermostat),
+                    _buildWeatherStat(
+                        'Atmospheric Humidity', '$hum%', Icons.water_drop),
                   ],
                 ),
               ],
@@ -1610,16 +1830,21 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF10221C).withOpacity(0.7),
+              color: const Color(0xFF10221C).withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF74DE80).withOpacity(0.18)),
+              border: Border.all(
+                  color: const Color(0xFF74DE80).withValues(alpha: 0.18)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'ENVIRONMENTAL REGULATORY COMPLIANCE MATRIX (CPCB & TNPCB STANDARDS)',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF6EE7B7), letterSpacing: 0.8),
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF6EE7B7),
+                      letterSpacing: 0.8),
                 ),
                 const SizedBox(height: 14),
                 Table(
@@ -1630,15 +1855,25 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
                     3: FlexColumnWidth(3),
                   },
                   children: [
-                    _buildTableRow('Parameter', 'Current Level', 'National Standard', 'Compliance Status', isHeader: true),
-                    _buildTableRow('PM2.5 (Fine Particulate)', '21.4 µg/m³', '60 µg/m³ (24h)', 'COMPLIANT ✅'),
-                    _buildTableRow('PM10 (Inhalable Coarse)', '28.6 µg/m³', '100 µg/m³ (24h)', 'COMPLIANT ✅'),
-                    _buildTableRow('Nitrogen Dioxide (NO₂)', '18.2 µg/m³', '80 µg/m³ (24h)', 'COMPLIANT ✅'),
-                    _buildTableRow('Sulphur Dioxide (SO₂)', '12.0 µg/m³', '80 µg/m³ (24h)', 'COMPLIANT ✅'),
-                    _buildTableRow('Carbon Monoxide (CO)', '1.1 mg/m³', '2.0 mg/m³ (8h)', 'COMPLIANT ✅'),
-                    _buildTableRow('Tropospheric Ozone (O₃)', '76.0 µg/m³', '100 µg/m³ (8h)', 'COMPLIANT ✅'),
-                    _buildTableRow('Water Dissolved Solids (TDS)', '280 ppm', '< 500 ppm', 'GOOD SAFE POTABLE ✅'),
-                    _buildTableRow('Dissolved Oxygen (DO)', '4.1 mg/L', '> 4.0 mg/L', 'AEROBIC HEALTHY ✅'),
+                    _buildTableRow('Parameter', 'Current Level',
+                        'National Standard', 'Compliance Status',
+                        isHeader: true),
+                    _buildTableRow('PM2.5 (Fine Particulate)', '21.4 µg/m³',
+                        '60 µg/m³ (24h)', 'COMPLIANT ✅'),
+                    _buildTableRow('PM10 (Inhalable Coarse)', '28.6 µg/m³',
+                        '100 µg/m³ (24h)', 'COMPLIANT ✅'),
+                    _buildTableRow('Nitrogen Dioxide (NO₂)', '18.2 µg/m³',
+                        '80 µg/m³ (24h)', 'COMPLIANT ✅'),
+                    _buildTableRow('Sulphur Dioxide (SO₂)', '12.0 µg/m³',
+                        '80 µg/m³ (24h)', 'COMPLIANT ✅'),
+                    _buildTableRow('Carbon Monoxide (CO)', '1.1 mg/m³',
+                        '2.0 mg/m³ (8h)', 'COMPLIANT ✅'),
+                    _buildTableRow('Tropospheric Ozone (O₃)', '76.0 µg/m³',
+                        '100 µg/m³ (8h)', 'COMPLIANT ✅'),
+                    _buildTableRow('Water Dissolved Solids (TDS)', '280 ppm',
+                        '< 500 ppm', 'GOOD SAFE POTABLE ✅'),
+                    _buildTableRow('Dissolved Oxygen (DO)', '4.1 mg/L',
+                        '> 4.0 mg/L', 'AEROBIC HEALTHY ✅'),
                   ],
                 ),
               ],
@@ -1654,13 +1889,19 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
       children: [
         Icon(icon, color: const Color(0xFF10B981), size: 24),
         const SizedBox(height: 6),
-        Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.white54)),
+        Text(value,
+            style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
+        Text(label,
+            style: const TextStyle(fontSize: 11, color: Colors.white54)),
       ],
     );
   }
 
-  TableRow _buildTableRow(String c1, String c2, String c3, String c4, {bool isHeader = false}) {
+  TableRow _buildTableRow(String c1, String c2, String c3, String c4,
+      {bool isHeader = false}) {
     final style = TextStyle(
       fontSize: 12,
       fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
@@ -1671,10 +1912,18 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with SingleTi
         color: isHeader ? const Color(0xFF0E1A16) : Colors.transparent,
       ),
       children: [
-        Padding(padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8), child: Text(c1, style: style)),
-        Padding(padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8), child: Text(c2, style: style)),
-        Padding(padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8), child: Text(c3, style: style)),
-        Padding(padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8), child: Text(c4, style: style)),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            child: Text(c1, style: style)),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            child: Text(c2, style: style)),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            child: Text(c3, style: style)),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            child: Text(c4, style: style)),
       ],
     );
   }
@@ -1709,11 +1958,13 @@ class CircularScorePainter extends CustomPainter {
     // Draw background track (240 degrees sweep)
     const startAngle = 150 * math.pi / 180;
     const totalSweep = 240 * math.pi / 180;
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), startAngle, totalSweep, false, bgPaint);
+    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), startAngle,
+        totalSweep, false, bgPaint);
 
     // Draw filled arc
     final sweep = totalSweep * (score / 100.0).clamp(0.0, 1.0);
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), startAngle, sweep, false, fgPaint);
+    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), startAngle,
+        sweep, false, fgPaint);
   }
 
   @override
@@ -1740,7 +1991,7 @@ class ChennaiRadarPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // 1. Background Grid & Coastline
     final gridPaint = Paint()
-      ..color = const Color(0xFF10B981).withOpacity(0.08)
+      ..color = const Color(0xFF10B981).withValues(alpha: 0.08)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -1753,7 +2004,7 @@ class ChennaiRadarPainter extends CustomPainter {
 
     // 2. Concentric Radar Rings
     final radarRingPaint = Paint()
-      ..color = const Color(0xFF10B981).withOpacity(0.12)
+      ..color = const Color(0xFF10B981).withValues(alpha: 0.12)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -1764,18 +2015,24 @@ class ChennaiRadarPainter extends CustomPainter {
 
     // 3. Simulated Coastline on the East (Bay of Bengal)
     final coastPaint = Paint()
-      ..color = const Color(0xFF38BDF8).withOpacity(0.25)
+      ..color = const Color(0xFF38BDF8).withValues(alpha: 0.25)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5;
 
     final coastPath = Path();
     coastPath.moveTo(size.width * 0.82, 0);
-    coastPath.quadraticBezierTo(size.width * 0.78, size.height * 0.4, size.width * 0.72, size.height * 0.7);
-    coastPath.quadraticBezierTo(size.width * 0.69, size.height * 0.9, size.width * 0.67, size.height);
+    coastPath.quadraticBezierTo(size.width * 0.78, size.height * 0.4,
+        size.width * 0.72, size.height * 0.7);
+    coastPath.quadraticBezierTo(
+        size.width * 0.69, size.height * 0.9, size.width * 0.67, size.height);
     canvas.drawPath(coastPath, coastPaint);
 
     // Label Bay of Bengal
-    const bayStyle = TextStyle(color: Color(0xFF38BDF8), fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.5);
+    const bayStyle = TextStyle(
+        color: Color(0xFF38BDF8),
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.5);
     final textPainter = TextPainter(
       text: const TextSpan(text: 'BAY OF BENGAL', style: bayStyle),
       textDirection: TextDirection.ltr,
@@ -1787,12 +2044,16 @@ class ChennaiRadarPainter extends CustomPainter {
       final pos = _convert(s.latitude, s.longitude, size);
       final isSelected = selectedStation?.location == s.location;
 
-      Color color = s.airQuality <= 50 ? const Color(0xFF10B981) : (s.airQuality <= 100 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444));
+      Color color = s.airQuality <= 50
+          ? const Color(0xFF10B981)
+          : (s.airQuality <= 100
+              ? const Color(0xFFF59E0B)
+              : const Color(0xFFEF4444));
 
       // Glow Ripple for selected or active
       if (isSelected) {
         final ripplePaint = Paint()
-          ..color = color.withOpacity(0.3 * (1.0 - pulseProgress))
+          ..color = color.withValues(alpha: 0.3 * (1.0 - pulseProgress))
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2.0;
         canvas.drawCircle(pos, 10 + 12 * pulseProgress, ripplePaint);
@@ -1894,9 +2155,12 @@ class _CitizenGrievanceDialogState extends State<CitizenGrievanceDialog> {
   }
 
   Future<void> _submit() async {
-    if (_nameController.text.trim().isEmpty || _locationController.text.trim().isEmpty) {
+    if (_nameController.text.trim().isEmpty ||
+        _locationController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please provide your name and the incident location.')),
+        const SnackBar(
+            content:
+                Text('Please provide your name and the incident location.')),
       );
       return;
     }
@@ -1939,12 +2203,16 @@ class _CitizenGrievanceDialogState extends State<CitizenGrievanceDialog> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.report_problem, color: Color(0xFFF59E0B), size: 24),
+                  const Icon(Icons.report_problem,
+                      color: Color(0xFFF59E0B), size: 24),
                   const SizedBox(width: 10),
                   const Expanded(
                     child: Text(
                       'Citizen Environmental Grievance Portal',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ),
                   IconButton(
@@ -1955,12 +2223,13 @@ class _CitizenGrievanceDialogState extends State<CitizenGrievanceDialog> {
               ),
               Text(
                 'Report illegal pollution directly to Tamil Nadu Pollution Control Board (TNPCB) Flying Squad',
-                style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.6)),
+                style: TextStyle(
+                    fontSize: 11, color: Colors.white.withValues(alpha: 0.6)),
               ),
               const SizedBox(height: 18),
               _buildFieldLabel('Incident Category'),
               DropdownButtonFormField<String>(
-                value: _selectedIncident,
+                initialValue: _selectedIncident,
                 dropdownColor: const Color(0xFF162B24),
                 style: const TextStyle(color: Colors.white, fontSize: 13),
                 decoration: _inputDecoration(),
@@ -2006,14 +2275,21 @@ class _CitizenGrievanceDialogState extends State<CitizenGrievanceDialog> {
                 child: ElevatedButton.icon(
                   onPressed: _isSubmitting ? null : _submit,
                   icon: _isSubmitting
-                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.black))
                       : const Icon(Icons.send, size: 16),
-                  label: Text(_isSubmitting ? 'TRANSMITTING...' : 'SUBMIT GRIEVANCE TICKET'),
+                  label: Text(_isSubmitting
+                      ? 'TRANSMITTING...'
+                      : 'SUBMIT GRIEVANCE TICKET'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF10B981),
                     foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ),
@@ -2029,7 +2305,10 @@ class _CitizenGrievanceDialogState extends State<CitizenGrievanceDialog> {
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF6EE7B7)),
+        style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF6EE7B7)),
       ),
     );
   }
@@ -2041,11 +2320,13 @@ class _CitizenGrievanceDialogState extends State<CitizenGrievanceDialog> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: const Color(0xFF74DE80).withOpacity(0.2)),
+        borderSide:
+            BorderSide(color: const Color(0xFF74DE80).withValues(alpha: 0.2)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: const Color(0xFF74DE80).withOpacity(0.2)),
+        borderSide:
+            BorderSide(color: const Color(0xFF74DE80).withValues(alpha: 0.2)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
