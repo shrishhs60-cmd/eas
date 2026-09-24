@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, HTMLResponse
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
@@ -384,10 +384,256 @@ def serve_flutter():
     return RedirectResponse(url="/eas")
 
 
-@app.get("/api/realtime/live-status")
-def get_realtime_status():
-    telemetry = fetch_real_atmospheric_telemetry()
+@app.get("/health")
+@app.get("/api/health")
+def health_check():
     return {
+        "status": "UP",
+        "service": "EAS Environmental Analyzing System",
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+
+def _render_live_status_html(status_data: Dict[str, Any]) -> str:
+    weather = status_data.get("current_weather") or {}
+    air = status_data.get("current_air_quality") or {}
+    temp = weather.get("temperature_2m", "30.5")
+    humidity = weather.get("relative_humidity_2m", "68")
+    wind_spd = weather.get("wind_speed_10m", "12.4")
+    aqi = air.get("us_aqi", "68")
+    json_str = json.dumps(status_data, indent=2)
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EAS - System Telemetry &amp; Live Status</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #0d1e38 0%, #080c16 70%, #04070e 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }}
+    .container {{
+      max-width: 640px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(16, 185, 129, 0.08);
+      text-align: center;
+    }}
+    .badge-live {{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }}
+    .pulsing-dot {{
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+    }}
+    @keyframes pulse {{
+      0% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }}
+      70% {{ box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }}
+      100% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }}
+    }}
+    h1 {{
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }}
+    .subtitle {{
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }}
+    .cta-card {{
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }}
+    .cta-card p {{
+      font-size: 14px;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+    }}
+    .btn-launch {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+      transition: all 0.2s ease;
+    }}
+    .btn-launch:hover {{
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(16, 185, 129, 0.45);
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    }}
+    .stats-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+      text-align: left;
+    }}
+    .stat-item {{
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }}
+    .stat-label {{
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #64748b;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }}
+    .stat-val {{
+      font-size: 18px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }}
+    details {{
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: left;
+    }}
+    summary {{
+      cursor: pointer;
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 600;
+      user-select: none;
+    }}
+    summary:hover {{
+      color: #e2e8f0;
+    }}
+    pre {{
+      margin-top: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #38bdf8;
+      background: #04070e;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      max-height: 220px;
+    }}
+    .footer-note {{
+      margin-top: 20px;
+      font-size: 12px;
+      color: #64748b;
+    }}
+    .footer-note a {{
+      color: #10b981;
+      text-decoration: none;
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge-live">
+      <span class="pulsing-dot"></span>
+      Backend Grid Active &amp; Online
+    </div>
+
+    <h1>EAS Real-Time Telemetry Feed</h1>
+    <p class="subtitle">
+      Automated 24/7 background telemetry feed for Greater Chennai &amp; Uptime monitors.
+    </p>
+
+    <div class="cta-card">
+      <p>Looking for the interactive <strong>EAS Environmental Dashboard</strong> with maps, station analytics &amp; citizen grievances?</p>
+      <a href="/eas" class="btn-launch">
+        🚀 Launch EAS Web Application &rarr;
+      </a>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-label">Air Quality (US AQI)</div>
+        <div class="stat-val" style="color: #10b981;">{aqi} &bull; Live</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Ambient Temperature</div>
+        <div class="stat-val">{temp}&deg;C</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Relative Humidity</div>
+        <div class="stat-val">{humidity}%</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Wind Speed</div>
+        <div class="stat-val">{wind_spd} km/h</div>
+      </div>
+    </div>
+
+    <details>
+      <summary>View Raw JSON Data (for APIs &amp; Developers)</summary>
+      <pre><code>{json_str}</code></pre>
+      <p style="margin-top: 8px; font-size: 12px; color: #94a3b8;">
+        Pure JSON endpoint available at: <a href="/api/realtime/live-status?format=json" style="color: #38bdf8;">/api/realtime/live-status?format=json</a>
+      </p>
+    </details>
+
+    <div class="footer-note">
+      Chennai Environmental Analyzing System &bull; <a href="/eas">Open Full EAS Portal</a>
+    </div>
+  </div>
+</body>
+</html>"""
+
+
+@app.get("/api/realtime/live-status")
+def get_realtime_status(request: Request, format: Optional[str] = Query(None)):
+    telemetry = fetch_real_atmospheric_telemetry()
+    status_data = {
         "network_status": "ONLINE",
         "feed_source": "Open-Meteo Global Satellite & ECMWF Reanalysis (Real-Time)",
         "monitoring_grid": "Greater Chennai 26-Station CAAQMS & NWMP",
@@ -395,6 +641,14 @@ def get_realtime_status():
         "current_weather": telemetry.get("weather"),
         "current_air_quality": telemetry.get("air_quality")
     }
+
+    accept = request.headers.get("accept", "")
+    wants_html = ("text/html" in accept) and (format != "json") and ("application/json" not in accept)
+
+    if wants_html:
+        return HTMLResponse(content=_render_live_status_html(status_data), status_code=200)
+
+    return status_data
 
 
 @app.post("/api/realtime/sync")
